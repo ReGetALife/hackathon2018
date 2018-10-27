@@ -1,28 +1,121 @@
 pragma solidity 0.4.24;
 
-contract LoveStory {
+contract LoveStore {
+    
+    //时间链结点
+    struct link{
+        uint256 time;
+        uint8 Type;
+    }
+    
+    mapping (address => uint256[]) private sec_cate;
+    mapping (address => uint256[]) private pro_cate;
+    mapping (address => uint256[]) private ann_cate;
+    mapping (address => uint256[]) private dia_cate;
+    mapping (address => link[]) private categories;
+    //添加到时间链
+    
+    function addtosec(address from,uint256 time) private
+    {
+        sec_cate[from].push(time);
+    }
+    
+    function addtopro(address from,uint256 time) private
+    {
+        pro_cate[from].push(time);
+    }
+    
+    function addtoann(address from,uint256 time) private
+    {
+        ann_cate[from].push(time);
+    }
+    
+    function addtodia(address from,uint256 time) private
+    {
+        dia_cate[from].push(time);
+    }
+    
+    function getsec(address from) public view returns (uint256[]){
+        return sec_cate[from];
+    }
+    
+    function getpro(address from) public view returns (uint256[]){
+        return pro_cate[from];
+    }
+    
+    function getann(address from) public view returns (uint256[]){
+        return ann_cate[from];
+    }
+    
+    function getdia(address from) public view returns (uint256[]){
+        return dia_cate[from];
+    }
+    
+    function addtoList(address from,uint256 time, uint8 Type)
+    {
+        link node;
+        node.time=time;
+        node.Type=Type;
+        categories[from].push(node);
+    }
+    function getalltime(address from) public view returns (uint256[]){
+        uint256[] timelist;
+        uint leng = categories[from].length;
+        
+        for(uint i = 0; i < leng; i++)
+        {
+            timelist.push(categories[from][i].time);
+        }
+        
+        return timelist;
+    }
+    function getalltype(address from) public view returns (uint8[]){
+        uint8[] Tpyelist;
+        uint leng = categories[from].length;
+        
+        for(uint i = 0; i < leng; i++)
+        {
+            Tpyelist.push(categories[from][i].Type);
+        }
+        
+        return Tpyelist;
+    }
     
     //测试
-    function testabi(string text) constant returns(bytes){
-        bytes memory tb = bytes(text);
-        bytes memory ts;
-        uint k = 0;
+    function test2(bytes aaa) constant returns(bytes1){
+        bytes1 te = aaa[0];
+        return te;
         
-        for (uint i = 0; i < tb.length; i++)
-            ts[k++] = tb[i];
-        
-        return tb;
+        //return ts;
         //return string(ts);
+    }
+    
+    //测试
+    function test(string text) public view returns(string){
+        bytes memory tb = bytes(text);
+        string memory ret = new string(tb.length);
+        bytes memory ts = bytes(ret);
+        uint k = tb.length - 1;
+        for (uint i = 0; i < tb.length ; i++)
+        {
+            ts[k] = tb[i];
+            k--;
+        }
+        return string(ts);
     }
     
     
     //加密
     function mys(string text) constant returns(string){
         bytes memory tb = bytes(text);
-        bytes memory ts;
-        uint k = 0;
-        for (uint i = tb.length - 1; i >= 0; i--)
-            ts[k++] = tb[i];
+        string memory ret = new string(tb.length);
+        bytes memory ts = bytes(ret);
+        uint k = tb.length - 1;
+        for (uint i = 0; i < tb.length ; i++)
+        {
+            ts[k] = tb[i];
+            k--;
+        }
         return string(ts);
     }
     //存储一对情侣信息
@@ -97,13 +190,13 @@ contract LoveStory {
     mapping (address => anniversary[]) private anniversarys;//纪念日
     mapping (address => mapping (uint256 => string)) private diarys;//手账
 
-    event Recorded(address _sender, string indexed _text, uint256 indexed _time);
-
-    //secerts
+    
+    //secerts 1
     //add secert
     function add_sec(string text, address from, uint256 time) public {
         secerts[from][time]=mys(text);
-        emit Recorded(from, text, time);
+        addtoList(from, time, 1);
+        addtosec(from, time);
     }
     //get secert 
     function get_sec(address from, uint256 time) public view returns(string) {
@@ -112,7 +205,7 @@ contract LoveStory {
         else return "you have not the rights";
     }
 
-    //promises
+    //promises 2
     //add promise
     function add_pro(string text, address from, uint256 time,bool canSee) public {
         if(canSee==false)
@@ -122,7 +215,9 @@ contract LoveStory {
         }
         else promises[from][time].text=text;
         promises[from][time].can_see=canSee;
-        emit Recorded(msg.sender, text, time);
+        addtoList(from, time, 2);
+        addtopro(from, time);
+        //emit Recorded(msg.sender, text, time);
     }
     //get promise
     function get_pro(address from, uint256 time) public view returns(string) {
@@ -135,13 +230,15 @@ contract LoveStory {
         else return promises[from][time].text;
     }
 
-    //anniversarys
+    //anniversarys 3
     //add anniversary
     function add_ann(address from, uint256 time, string name) public {
         anniversary sh;
         sh.time=time;
         sh.ann_name=name;
         anniversarys[from].push(sh);
+        addtoList(from, time, 3);
+        addtoann(from, time);
     }
     //get anniversary time and name
     function get_anntime(address from,uint256 time) public view returns(uint) {
@@ -171,11 +268,12 @@ contract LoveStory {
         
     }
 
-    //diarys
+    //diarys 4
     //add diary
     function add_dia(string text, address from, uint256 time) public {
         diarys[from][time]=text;
-        emit Recorded(msg.sender, text, time);
+        addtoList(from, time, 4);
+        addtodia(from, time);
     }
     //get diary
     function get_dia(address from, uint256 time) public view returns(string) {
