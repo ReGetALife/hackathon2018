@@ -4,6 +4,8 @@ import React from 'react'
 import './home.css'
 import { NavBar, Icon,List, Switch,TextareaItem } from 'antd-mobile';
 import { createForm } from 'rc-form';
+import { Button, WhiteSpace, WingBlank } from 'antd-mobile';
+
 
 
 
@@ -38,7 +40,7 @@ class SwitchExample extends React.Component {
               });
             }}
           />}
-        >Public</List.Item>
+        >公开</List.Item>
 
       </List>
     );
@@ -53,7 +55,7 @@ class TextareaItemExample extends React.Component {
     const { getFieldProps } = this.props.form;
     return (
       <div>
-        <List renderHeader={() => 'Secret'}>
+        <List renderHeader={() => '记住我们的约定'}>
           <TextareaItem
             {...getFieldProps('count', {
     
@@ -69,6 +71,15 @@ class TextareaItemExample extends React.Component {
 
 const TextareaItemExampleWrapper = createForm()(TextareaItemExample);
 
+const ButtonExample = () => (
+  <WingBlank>
+     <WhiteSpace />
+     <WhiteSpace />
+     <Button type="warning" disabled>直到永远</Button><WhiteSpace />
+  </WingBlank>
+);
+
+
 const Home = () => (
   <div>
     <div>
@@ -81,12 +92,9 @@ const Home = () => (
       ]}
     >In Love</NavBar>
     </div>
-    <div>
-      <TextareaItemExampleWrapper />
-    </div>
-    <div>
+    <TextareaItemExampleWrapper />
     <Se />
-    </div>
+    <ButtonExample />
   </div>
 )
 
