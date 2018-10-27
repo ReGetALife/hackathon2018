@@ -81,30 +81,6 @@ contract LoveStory {
         return Tpyelist;
     }
     
-    //≤‚ ‘
-    function test2(bytes aaa) constant returns(bytes1){
-        bytes1 te = aaa[0];
-        return te;
-        
-        //return ts;
-        //return string(ts);
-    }
-    
-    //≤‚ ‘
-    function test(string text) public view returns(string){
-        bytes memory tb = bytes(text);
-        string memory ret = new string(tb.length);
-        bytes memory ts = bytes(ret);
-        uint k = tb.length - 1;
-        for (uint i = 0; i < tb.length ; i++)
-        {
-            ts[k] = tb[i];
-            k--;
-        }
-        return string(ts);
-    }
-    
-    
     //º”√‹
     function mys(string text) constant returns(string){
         bytes memory tb = bytes(text);
