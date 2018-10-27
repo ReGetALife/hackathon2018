@@ -5,7 +5,7 @@ import { Motion, StaggeredMotion, spring } from 'react-motion'
 import noop from 'react-props-noop'
 import classNames from 'classnames/bind';
 import { Link } from 'react-router-dom'
-import { NavBar, Icon } from 'antd-mobile';
+import { Popover, NavBar, Icon } from 'antd-mobile';
 //import logo from '../../public/images/logo.svg'
 //import BottomNav from '../../components/BottomNav'
 import './home.css'
@@ -149,17 +149,77 @@ class Menu extends Component {
 }
 
 
+const Item = Popover.Item;
+
+const myImg = src => <img src={`https://gw.alipayobjects.com/zos/rmsportal/${src}.svg`} className="am-icon am-icon-xs" alt="" />;
+class NavApp extends React.Component {
+  state = {
+    visible: false,
+    selected: '',
+  };
+  onSelect = (opt) => {
+    // console.log(opt.props.value);
+    this.setState({
+      visible: false,
+      selected: opt.props.value,
+    });
+    if (opt.props.value==="list") 
+    {
+      window.location="/list"
+    } 
+    else {window.location="/find"}
+  };
+  handleVisibleChange = (visible) => {
+    this.setState({
+      visible,
+    });
+  };
+  render() {
+    return (<div>
+      <NavBar
+        mode="light"
+        icon={<img src={require('../../public/logo.png')} className="am-icon am-icon-xs" alt="" />}
+        rightContent={
+          <Popover mask
+            overlayClassName="fortest"
+            overlayStyle={{ color: 'currentColor' }}
+            visible={this.state.visible}
+            overlay={[
+              (<Item key="4" value="list" icon={myImg('tOtXhkIWzwotgGSeptou')} data-seed="logId">时间轴</Item>),
+              (<Item key="5" value="find" icon={myImg('PKAgAqZWJVNwKsAJSmXd')} style={{ whiteSpace: 'nowrap' }}>去哪玩</Item>),
+
+            ]}
+            align={{
+              overflow: { adjustY: 0, adjustX: 0 },
+              offset: [-10, 0],
+            }}
+            onVisibleChange={this.handleVisibleChange}
+            onSelect={this.onSelect}
+          >
+            <div style={{
+              height: '100%',
+              padding: '0 15px',
+              marginRight: '-15px',
+              display: 'flex',
+              alignItems: 'center',
+            }}
+            >
+              <Icon type="ellipsis" />
+            </div>
+          </Popover>
+        }
+      >
+      In Love
+        
+      </NavBar>
+    </div>);
+  }
+}
+
 const Home = () => (
   <div>
     <div>
-    <NavBar
-      mode="light"
-      icon={<img src={require('../../public/logo.png')} width="40%" height="20%" alt="icon" />}
-      onLeftClick={() => console.log('onLeftClick')}
-      rightContent={[
-        <Icon key="1" type="ellipsis" />,
-      ]}
-    >In Love</NavBar>
+    <NavApp />
     </div>
     <div className="home__logo--container">
       <span className="home__logo--text"> In Love  </span>
